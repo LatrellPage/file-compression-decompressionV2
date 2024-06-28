@@ -24,11 +24,12 @@
       <artifactId>commons-compress</artifactId>
       <version>1.21</version>
     </dependency>
+    <!-- Spring Boot DevTools -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13.2</version>
-      <scope>test</scope>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
+      <scope>runtime</scope>
+      <optional>true</optional>
     </dependency>
   </dependencies>
 
@@ -37,6 +38,9 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <excludeDevtools>false</excludeDevtools>
+        </configuration>
       </plugin>
     </plugins>
   </build>

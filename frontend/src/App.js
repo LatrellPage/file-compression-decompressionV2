@@ -65,13 +65,17 @@ const useFileSelector = () => {
         if (file) {
             setSelectedFile(file);
             try {
+                console.log('Sending file to server:', file.name);
                 const formData = new FormData();
                 formData.append('file', file);
                 formData.append('compressorType', 'gz');
-                const response = await axios.post('http://localhost:8080/compress', formData, {
-                    headers: { 'Content-Type': 'multipart/form-data' },
-                    responseType: 'blob',
+                const response = await axios.post('http://localhost:8080/api/compress', formData, {
+                  responseType: 'blob',
+                  headers: {
+                    'Content-Type': 'multipart/form-data'
+                  }
                 });
+                console.log('Received response from server:', response);
                 // Handle the compressed file response
                 const compressedFile = new Blob([response.data], { type: response.headers['content-type'] });
                 // Trigger file download
@@ -79,8 +83,18 @@ const useFileSelector = () => {
                 downloadLink.href = window.URL.createObjectURL(compressedFile);
                 downloadLink.download = 'compressed.gz';
                 downloadLink.click();
+                console.log('File download triggered');
             } catch (error) {
                 console.error('Error compressing file:', error);
+                if (error.response) {
+                    console.error('Response data:', error.response.data);
+                    console.error('Response status:', error.response.status);
+                    console.error('Response headers:', error.response.headers);
+                } else if (error.request) {
+                    console.error('No response received:', error.request);
+                } else {
+                    console.error('Error setting up request:', error.message);
+                }
             } finally {
                 setLoading(false);
             }

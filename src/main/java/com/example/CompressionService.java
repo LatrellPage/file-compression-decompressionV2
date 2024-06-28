@@ -23,16 +23,4 @@ public class CompressionService {
         }
         return outputStream.toByteArray();
     }
-
-    public byte[] decompressFile(byte[] compressedData, String compressorType) throws IOException {
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(compressedData);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try (CompressorOutputStream compressorOutputStream = new CompressorStreamFactory()
-                .createCompressorOutputStream(compressorType, outputStream)) {
-            IOUtils.copy(inputStream, compressorOutputStream);
-        } catch (CompressorException e) {
-            throw new IOException("Failed to decompress file", e);
-        }
-        return outputStream.toByteArray();
-    }
 }

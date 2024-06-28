@@ -144,6 +144,7 @@ progress {
     display: grid;
     place-items: center;
     margin-top: 3rem;
+    cursor: pointer;
  }
 
  .p-container{
