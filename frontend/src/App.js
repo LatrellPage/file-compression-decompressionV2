@@ -3,7 +3,7 @@ import { useState } from 'react';
 import axios from 'axios';
 
 function App() {
-    const { selectedFile, handleFileChange } = useFileSelector();
+    const { selectedFile, handleFileChange, loading } = useFileSelector();
 
     const triggerFileInput = () => {
         document.getElementById("fileInput").click();
@@ -56,32 +56,37 @@ const useFileSelector = () => {
     const handleFileChange = async (event) => {
         setLoading(true);
         let file;
+        let formData;
+
         if (event instanceof FormData) {
-            file = event.get('file');
+            formData = event;
+            file = formData.get('file');
         } else if (event.target && event.target.files) {
             file = event.target.files[0];
+            formData = new FormData();
+            formData.append('file', file);
+            formData.append('compressorType', 'gz');
         }
 
         if (file) {
             setSelectedFile(file);
             try {
                 console.log('Sending file to server:', file.name);
-                const formData = new FormData();
-                formData.append('file', file);
-                formData.append('compressorType', 'gz');
                 const response = await axios.post('http://localhost:8080/api/compress', formData, {
-                  responseType: 'blob',
-                  headers: {
-                    'Content-Type': 'multipart/form-data'
-                  }
+                    responseType: 'blob',
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
                 });
                 console.log('Received response from server:', response);
+
                 // Handle the compressed file response
                 const compressedFile = new Blob([response.data], { type: response.headers['content-type'] });
+
                 // Trigger file download
                 const downloadLink = document.createElement('a');
                 downloadLink.href = window.URL.createObjectURL(compressedFile);
-                downloadLink.download = 'compressed.gz';
+                downloadLink.download = `${file.name}.gz`;
                 downloadLink.click();
                 console.log('File download triggered');
             } catch (error) {
@@ -104,7 +109,7 @@ const useFileSelector = () => {
         }
     };
 
-    return { selectedFile, handleFileChange };
+    return { selectedFile, handleFileChange, loading };
 };
 
 export default App;
