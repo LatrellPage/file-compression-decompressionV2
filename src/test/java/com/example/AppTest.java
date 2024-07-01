@@ -1,8 +1,10 @@
 package com.example;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 public class AppTest {
     @Test
     public void testApp() {
