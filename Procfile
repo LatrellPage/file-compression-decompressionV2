@@ -1,1 +1,1 @@
-web: java -jar target/your-app-name.jar
+web: java -jar target/file-compression-decompression-1.0-SNAPSHOT.jar
